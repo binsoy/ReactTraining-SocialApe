@@ -1,2 +1,1 @@
-# ReactTraining-SocialApeSV
-SocialApe server side
+# ReactTraining-SocialApe
