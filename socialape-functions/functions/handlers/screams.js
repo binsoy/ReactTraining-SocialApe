@@ -115,7 +115,6 @@ exports.commentOnScream = (req, res) => {
       res.json({ newComment });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ error: "Something went wrong" });
     });
 };
@@ -163,7 +162,6 @@ exports.likeScream = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ error: err.code });
     });
 };
@@ -208,7 +206,6 @@ exports.unlikeScream = (req, res) => {
       }
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({ error: err.code });
     });
 };
