@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import dayjs from "dayjs";
 import { Link } from "react-router-dom";
+import EditDetails from "./EditDetails";
+import CustomButton from "../util/CustomButton";
 
 // MUI Stuffs
 import Button from "@material-ui/core/Button";
@@ -14,9 +16,12 @@ import MuiLink from "@material-ui/core/Link";
 import LocationOn from "@material-ui/icons/LocationOn";
 import LinkIcon from "@material-ui/icons/Link";
 import CalendarToday from "@material-ui/icons/CalendarToday";
+import EditIcon from "@material-ui/icons/Edit";
+import KeyboardReturn from "@material-ui/icons/KeyboardReturn";
 
 //Redux
 import { connect } from "react-redux";
+import { logoutUser, uploadImage } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   paper: {
@@ -65,8 +70,23 @@ const styles = (theme) => ({
     },
   },
 });
-
 export class Profile extends Component {
+  handleImageChange = ($event) => {
+    const image = $event.target.files[0];
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    this.props.uploadImage(formData);
+  };
+
+  handleEditPicture = ($event) => {
+    const fileInput = document.getElementById("imageInput");
+    fileInput.click();
+  };
+
+  handleLogout = () => {
+    this.props.logoutUser();
+  };
+
   render() {
     const {
       classes,
@@ -76,13 +96,26 @@ export class Profile extends Component {
         isAuthenticated,
       },
     } = this.props;
-    console.log(handle, createdAt, imageUrl, bio, website, location);
+
     let profileMarkup = !loading ? (
       isAuthenticated ? (
         <Paper className={classes.paper}>
           <div className={classes.profile}>
             <div className="image-wrapper">
               <img src={imageUrl} alt="profile" className="profile-image" />
+              <input
+                type="file"
+                id="imageInput"
+                hidden="hidden"
+                onChange={this.handleImageChange}
+              />
+              <CustomButton
+                tip="Edit profile picture"
+                onClick={this.handleEditPicture}
+                btnClassName="button"
+              >
+                <EditIcon color="primary" />
+              </CustomButton>
             </div>
             <div className="profile-details">
               <MuiLink
@@ -115,6 +148,10 @@ export class Profile extends Component {
               <CalendarToday color="primary" />{" "}
               <span>Joined {dayjs(createdAt).format("MMM YYYY")}</span>
             </div>
+            <CustomButton tip="Logout" onClick={this.handleLogout}>
+              <KeyboardReturn color="primary" />
+            </CustomButton>
+            <EditDetails />
           </div>
         </Paper>
       ) : (
@@ -152,10 +189,17 @@ export class Profile extends Component {
 Profile.propTypes = {
   user: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired,
+  logoutUser: PropTypes.func.isRequired,
+  uploadImage: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   user: state.user,
 });
 
-export default connect(mapStateToProps)(withStyles(styles)(Profile));
+const mapActionsToProps = { logoutUser, uploadImage };
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(Profile));
