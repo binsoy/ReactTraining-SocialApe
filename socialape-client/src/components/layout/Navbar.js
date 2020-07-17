@@ -2,7 +2,8 @@ import React, { Component, Fragment } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
-import CustomButton from "../util/CustomButton";
+import CustomButton from "../../util/CustomButton";
+import PostScream from "../scream/PostScream";
 
 // MUI stuffs
 import AppBar from "@material-ui/core/AppBar";
@@ -10,7 +11,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 
 //icons
-import AddIcon from "@material-ui/icons/Add";
 import HomeIcon from "@material-ui/icons/Home";
 import Notifications from "@material-ui/icons/Notifications";
 
@@ -22,9 +22,7 @@ class Navbar extends Component {
         <Toolbar className="nav-container">
           {isAuthenticated ? (
             <Fragment>
-              <CustomButton tip="Login">
-                <AddIcon />
-              </CustomButton>
+              <PostScream />
               <Link to="/">
                 <CustomButton tip="Home">
                   <HomeIcon />
