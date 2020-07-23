@@ -10,6 +10,7 @@ import {
   CLEAR_ERRORS,
   POST_SCREAM,
   STOP_LOADING_UI,
+  SUBMIT_COMMENT,
 } from "../types";
 import Axios from "axios";
 
@@ -51,10 +52,8 @@ export const getScream = (screamId) => (dispatch) => {
 
 /** Like a scream */
 export const likeScream = (screamId) => (dispatch) => {
-  console.log("reqwsdfsd");
   Axios.get(`/scream/${screamId}/like`)
     .then((res) => {
-      console.log(res);
       dispatch({
         type: LIKE_SCREAM,
         payload: res.data,
@@ -84,7 +83,25 @@ export const postScream = (newScream) => (dispatch) => {
         type: POST_SCREAM,
         payload: res.data,
       });
-      dispatch({ type: CLEAR_ERRORS });
+      dispatch(clearErrors());
+    })
+    .catch((err) => {
+      dispatch({
+        type: SET_ERRORS,
+        payload: err.response.data,
+      });
+    });
+};
+
+/** Submit a comment */
+export const submitComment = (screamId, commentData) => (dispatch) => {
+  Axios.post(`/scream/${screamId}/comment`, commentData)
+    .then((res) => {
+      dispatch({
+        type: SUBMIT_COMMENT,
+        payload: res.data,
+      });
+      dispatch(clearErrors());
     })
     .catch((err) => {
       dispatch({
@@ -104,6 +121,24 @@ export const deleteScream = (screamId) => (dispatch) => {
       });
     })
     .catch((err) => console.log(err));
+};
+
+/** Get user data */
+export const getUserData = (userHandle) => (dispatch) => {
+  dispatch({ type: LOADING_DATA });
+  Axios.get(`/user/${userHandle}`)
+    .then((res) => {
+      dispatch({
+        type: SET_SCREAMS,
+        payload: res.data.screams,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: SET_SCREAMS,
+        payload: null,
+      });
+    });
 };
 
 /** Clear scream dialog erros */

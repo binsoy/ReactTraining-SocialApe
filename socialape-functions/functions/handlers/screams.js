@@ -87,9 +87,8 @@ exports.getScream = (req, res) => {
 
 /** comment on a scream */
 exports.commentOnScream = (req, res) => {
-  if (req.body.body.trim() === "") {
-    return req.status(400).json({ comment: "Must not be empty" });
-  }
+  if (req.body.body.trim() === "")
+    return res.status(400).json({ comment: "Must not be empty" });
 
   const newComment = {
     body: req.body.body,
@@ -112,7 +111,7 @@ exports.commentOnScream = (req, res) => {
       return db.collection("comments").add(newComment);
     })
     .then(() => {
-      res.json({ newComment });
+      res.json(newComment);
     })
     .catch((err) => {
       res.status(500).json({ error: "Something went wrong" });
